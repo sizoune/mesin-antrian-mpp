@@ -21,6 +21,7 @@ export async function pairDevice() {
     try {
         console.log("Setup Start");
         const daftarDevice = await navigator.usb.getDevices()
+
         console.log(daftarDevice)
         if (daftarDevice && daftarDevice.length > 0) {
             const device = daftarDevice[0];
@@ -73,6 +74,10 @@ export async function pairDevice() {
                 print({device: device, deviceEndpoint: deviceOutEndpoint, data: testPrint().encode()})
                 return {device, deviceInEndpoint, deviceOutEndpoint};
             }
+        }   else {
+            const device = await navigator.usb.requestDevice({
+                filters: []
+            });
         }
 
 

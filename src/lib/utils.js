@@ -15,7 +15,7 @@ export function calculateMinHeight(layanan) {
 export const getEncoder = () => new EscPosEncoder();
 
 export async function pairDevice() {
-
+    let device
     let deviceInEndpoint;
     let deviceOutEndpoint;
     try {
@@ -24,62 +24,62 @@ export async function pairDevice() {
 
         console.log(daftarDevice)
         if (daftarDevice && daftarDevice.length > 0) {
-            const device = daftarDevice[0];
-            await device.open();
-
-            console.log("Claim Interface");
-            const devConf = await device.selectConfiguration(1);
-            console.log(devConf)
-            await device.claimInterface(device.configuration.interfaces[0].interfaceNumber);
-
-            // Ambil endpoint
-            device.configuration.interfaces[0].alternates[0].endpoints.forEach(ep => {
-                switch (ep.direction) {
-                    case "in":
-                        deviceInEndpoint = ep.endpointNumber;
-                        break;
-                    case "out":
-                        deviceOutEndpoint = ep.endpointNumber;
-                        break;
-                }
-            });
-
-            if (device.configuration.interfaces[0].claimed) {
-                console.log("Device claimed");
-                const testPrint = () => getEncoder().initialize()
-                        .text("-".repeat(32))
-                        .text("12345678901234567890123456789012")
-                        .text("0        1         2         3  ")
-                        .text("-".repeat(32))
-                        .text(lrtext("Kiri", "Kanan"))
-                        .align('center')
-                        .line('Tengah')
-                        .align('left')
-                        .size('small')
-                        .line('Ini ukuran Kecil')
-                        .size('normal')
-                        .line('Ini ukuran Normal')
-                        .underline(true)
-                        .line('Garis Bawah')
-                        .underline(false)
-                        .bold(true)
-                        .line('Tebal')
-                        .bold(false)
-                        .italic(true)
-                        .line('Miring')
-                        .italic(false)
-                        .cut()
-                    // .text(`Ini adalah tes cetak\n${(new Date()).getTime()}\n\n`)
-                ;
-                print({device: device, deviceEndpoint: deviceOutEndpoint, data: testPrint().encode()})
-                return {device, deviceInEndpoint, deviceOutEndpoint};
-            }
+            device = daftarDevice[0];
         }   else {
-            const device = await navigator.usb.requestDevice({
+             device = await navigator.usb.requestDevice({
                 filters: []
             });
         }
 
+        await device.open();
+
+        console.log("Claim Interface");
+        const devConf = await device.selectConfiguration(1);
+        console.log(devConf)
+        await device.claimInterface(device.configuration.interfaces[0].interfaceNumber);
+
+        // Ambil endpoint
+        device.configuration.interfaces[0].alternates[0].endpoints.forEach(ep => {
+            switch (ep.direction) {
+                case "in":
+                    deviceInEndpoint = ep.endpointNumber;
+                    break;
+                case "out":
+                    deviceOutEndpoint = ep.endpointNumber;
+                    break;
+            }
+        });
+
+        if (device.configuration.interfaces[0].claimed) {
+            console.log("Device claimed");
+            const testPrint = () => getEncoder().initialize()
+                    .text("-".repeat(32))
+                    .text("12345678901234567890123456789012")
+                    .text("0        1         2         3  ")
+                    .text("-".repeat(32))
+                    .text(lrtext("Kiri", "Kanan"))
+                    .align('center')
+                    .line('Tengah')
+                    .align('left')
+                    .size('small')
+                    .line('Ini ukuran Kecil')
+                    .size('normal')
+                    .line('Ini ukuran Normal')
+                    .underline(true)
+                    .line('Garis Bawah')
+                    .underline(false)
+                    .bold(true)
+                    .line('Tebal')
+                    .bold(false)
+                    .italic(true)
+                    .line('Miring')
+                    .italic(false)
+                    .cut()
+                // .text(`Ini adalah tes cetak\n${(new Date()).getTime()}\n\n`)
+            ;
+            print({device: device, deviceEndpoint: deviceOutEndpoint, data: testPrint().encode()})
+            return {device, deviceInEndpoint, deviceOutEndpoint};
+        }
 
         console.log("Setup End");
     } catch (error) {

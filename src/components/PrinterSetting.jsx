@@ -23,8 +23,6 @@ export default function PrinterSetting({device, onSuksesSet}) {
     //     getPairedDevice();
     // }, []);
 
-    console.log(`thermal data ${device}`)
-
     const connectPrinterHandler = async () => {
         if (!isConnected){
             try {

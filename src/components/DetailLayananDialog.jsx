@@ -27,11 +27,6 @@ export function DetailLayananDialog({thermalDevice, deviceOutPath, dataLayanan, 
     const [isSubmitting, setSubmitting] = useState(false);
     const [selectedLayanan, setSelectedLayanan] = useState(null)
 
-    useEffect(() => {
-        if (dataLayanan.layanan.length === 1) {
-            setSelectedLayanan(dataLayanan.layanan[0])
-        }
-    }, [dataLayanan]);
 
     const mutation = useMutation({
         mutationFn: ambilAntrian,
@@ -106,6 +101,11 @@ export function DetailLayananDialog({thermalDevice, deviceOutPath, dataLayanan, 
             })
     };
 
+    useEffect(() => {
+        if (dataLayanan.layanan.length === 1) {
+            setSelectedLayanan(dataLayanan.layanan[0])
+        }
+    }, [dataLayanan]);
 
     return (
         <Dialog open={true}>
@@ -156,8 +156,7 @@ export function DetailLayananDialog({thermalDevice, deviceOutPath, dataLayanan, 
                         Sedang Mengambil Nomor Antrian, Mohon Tunggu!
                     </Button>}
                     {!isSubmitting &&
-                        <Button type="submit" onClick={submitHandler} className="w-full">Ambil
-                            Antrian</Button>}
+                        <Button type="submit" onClick={submitHandler} className="w-full text-xl font-extrabold">AMBIL ANTRIAN</Button>}
                 </DialogFooter>
             </DialogContent>
         </Dialog>

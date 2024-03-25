@@ -108,10 +108,23 @@ export default function Home() {
         setKodeMesin(kode);
     };
 
+    const itemClickHandler = ({layanan}) => {
+        if (deviceThermal) {
+            setClickedLayanan(layanan)
+        } else {
+            toast({
+                variant: "destructive",
+                title: "Oopss, Telah Terjadi Kesalahan!",
+                description: "Pastikan Printer Sudah Terhubung terlebih dahulu!",
+            })
+        }
+    }
+
     return (
         <>
             <ThemeToggle/>
-            <PrinterSetting onSuksesSet={(test) => setDeviceThermal(test)} device={deviceThermal ? deviceThermal.device : null}/>
+            <PrinterSetting onSuksesSet={(test) => setDeviceThermal(test)}
+                            device={deviceThermal ? deviceThermal.device : null}/>
             <main className="flex flex-col gap-12 p-16">
                 <div className='self-center font-extrabold flex flex-row text-xl gap-2'>
                     <div>{currentDate}</div>
@@ -124,7 +137,8 @@ export default function Home() {
                 {isLoading && <h1>Sedang Memuat Data!</h1>}
                 {kodeMesin === null && <KodeMesinDialog onSuccessSetKode={successKodeHandler}/>}
                 {clickedLayanan !== null &&
-                    <DetailLayananDialog thermalDevice={deviceThermal.device} deviceOutPath={deviceThermal.deviceOutEndpoint}
+                    <DetailLayananDialog thermalDevice={deviceThermal.device}
+                                         deviceOutPath={deviceThermal.deviceOutEndpoint}
                                          dataLayanan={clickedLayanan} onClose={() => setClickedLayanan(null)}/>}
                 <div className=" absolute left-4 top-4 flex flex-row items-center gap-2 max-w-sm">
                     <img src="/tabalong.png" alt="logo kominfo" className="h-auto w-8"/>
@@ -136,7 +150,7 @@ export default function Home() {
                 {dataLayanan && <div className="grid grid-cols-2 gap-7">
                     {dataLayanan.map((layanan) => (
                         <LayananItem key={layanan.id} nama={layanan.nama}
-                                     onLayananClick={() => setClickedLayanan(layanan)}/>
+                                     onLayananClick={() => itemClickHandler({layanan})}/>
                     ))}
                 </div>}
                 {/*{dataCCTV && <div className="grid grid-cols-2 gap-7">*/}

@@ -32,7 +32,24 @@ async function getDaftarInstansi({ kode }) {
     data: { instansi },
   } = responseJson;
 
-  return instansi;
+  const sortedData = instansi.sort((a, b) => {
+    let nameA = a.nama.toUpperCase(); // Ignore upper and lowercase
+    let nameB = b.nama.toUpperCase(); // Ignore upper and lowercase
+
+    if (nameA < nameB) {
+      return -1;
+    }
+    if (nameA > nameB) {
+      return 1;
+    }
+
+    // Names must be equal
+    return 0;
+  });
+
+  console.log(sortedData);
+
+  return sortedData;
 }
 
 async function cekKodeMesin({ kode }) {
